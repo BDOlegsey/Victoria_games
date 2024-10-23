@@ -16,17 +16,18 @@ def border(X, Y, vx, vy):
 
     return [vx, vy]
 
-def border_key(X, Y):
+def border_key(X, Y, g):
     if X - R <= 0:
         X = R
-    elif X + R >= sizeX:
+    if X + R >= sizeX:
         X = sizeX - R
-    elif Y - R <= 0:
+    if Y - R <= 0:
         Y = R
-    elif Y + R >= sizeY:
+    if Y + R >= sizeY:
         Y = sizeY - R
+        g = 0
 
-    return [X, Y]
+    return [X, Y, g]
 
 def dist(X, Y, X1, Y1):
     return ((X - X1)**2 + (Y - Y1)**2)**0.5
@@ -46,12 +47,13 @@ FPS = 30
 X = 200; Y = 200
 X1 = 600; Y1 = 200
 
-vx = 10; vy = 2
+vx = 10; vy = 10
 vx1 = 10; vy1 = 2
 run_hor = 0
+run_vert = 0
+k = 1
 
-
-g = 2
+g = 4
 
 while game_run:
     clock.tick(FPS)
@@ -60,29 +62,44 @@ while game_run:
     #pygame.draw.circle(screen, [0, 0, 0], [X1, Y1], R)
     pygame.display.flip()
 
-    X += vx * run_hor
-    #X1 += vx1
+    X += vx * run_hor * k
+    Y += vy
+    vy += g
 
-    X, Y = border_key(X, Y)
+    X, Y, g = border_key(X, Y, g)
     #vx1, vy1 = border(X1, Y1, vx1, vy1)
 
     #if dist(X, Y, X1, Y1) <= 2*R:
     #    vx = -vx
     #    vx1 = -vx1
-
+    # Круг, который может плавно перемещаться враво-влево + физика: прыжок - пробел, ускорение на shift, замедление на ctrl
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_run = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_d:
-                X += 20
+                run_hor = 1
             if event.key == pygame.K_a:
                 run_hor = -1
+            if event.key == pygame.K_SPACE:
+                vy = -20
+                g = 2
+            if event.key == pygame.K_LSHIFT:
+                k = 2
+            if event.key == pygame.K_LCTRL:
+                k = 0.5
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_a:
                 run_hor = 0
+            if event.key == pygame.K_d:
+                run_hor = 0
+            if event.key == pygame.K_LSHIFT:
+                k = 1
+            if event.key == pygame.K_LCTRL:
+                k = 1
 
-    # Круг, который может плавно перемещаться вверх вниз и 
+
+
 screen.fill((255, 255, 255))
 pygame.display.flip()
 
@@ -96,10 +113,3 @@ pygame.display.flip()
 # pygame.display.flip()
 
 pygame.quit()
-
-
-"""
-1. Давайте реализуем квадрат, который может перемещаться
-
-2. Пусть теперь у него будет физика, и он сможет прыгать на пробел, скоряться на shift и замедляться на ctrl
-"""
