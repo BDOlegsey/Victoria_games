@@ -46,9 +46,9 @@ game_run = True
 FPS = 30
 
 X = 200; Y = 200
-X1 = 600; Y1 = 200
+X1 = 15; Y1 = 20
 
-vx = 10; vy = 10
+vx = 12; vy = 6
 vx1 = 10; vy1 = 2
 run_hor = 0
 run_vert = 0
@@ -58,6 +58,8 @@ g = 4
 
 
 is_draw = False
+
+v1 = 0
 
 
 while game_run:
@@ -73,14 +75,19 @@ while game_run:
         if event.type == pygame.QUIT:
             game_run = False
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                if dist(X, Y, event.pos[0], event.pos[1]) <= R:
-                    X = randint(35, 965) # event.pos[0]
-                    Y = randint(35, 465) # event.pos[1]
+            if event.button == 4:
+                Y1 -= 10
+            if event.button == 5:
+                Y1 += 10
         if event.type == pygame.MOUSEBUTTONUP:
-            if event.button == 1:
-                pass
+            pass
 
+    X += vx
+    Y += vy
+
+    vx, vy = border(X, Y, vx, vy)
+
+    pygame.draw.rect(screen, [0, 0, 0], [X1, Y1, 30, 100])
     pygame.draw.circle(screen, [0, 0, 0], [X, Y], R)
     pygame.display.flip()
 
