@@ -43,12 +43,13 @@ clock = pygame.time.Clock()
 
 
 game_run = True
-FPS = 30
+FPS = 60
 
 X = 200; Y = 200
 X1 = 15; Y1 = 20
+X2 = 985; Y2 = 20
 
-vx = 12; vy = 6
+vx = 10; vy = 4
 vx1 = 10; vy1 = 2
 run_hor = 0
 run_vert = 0
@@ -67,8 +68,8 @@ while game_run:
     screen.fill((255, 255, 255))
 
     '''
-    Прак1: Реализуйте кликер: Кружок спавнится в случайном месте (74 и 75 строки)
-    Вы должны на него кликнуть, тогда он переместится в дургое случайное место
+    Прак2: Реализуйте такую механику, что кружок, заходя за левую границу, появлялся в случайном месте (но не у левой границы)
+    + взиамодействие кружка с прямоугольником
     '''
 
     for event in pygame.event.get():
@@ -87,7 +88,23 @@ while game_run:
 
     vx, vy = border(X, Y, vx, vy)
 
+    if X - R <= X1 + 30:
+        if Y >= Y1 and Y <= Y1 + 100:
+            vx *= -1
+    if X - R <= 0:
+        X = 500
+        Y = randint(50, 450)
+    if X + R >= 1000:
+        X = 500
+        Y = randint(50, 450)
+
+    if Y2 + 50 < Y - 50:
+        Y2 += 2
+    elif Y2 + 50 > Y + 50:
+        Y2 -= 2
+
     pygame.draw.rect(screen, [0, 0, 0], [X1, Y1, 30, 100])
+    pygame.draw.rect(screen, [0, 0, 0], [X2, Y2, 30, 100])
     pygame.draw.circle(screen, [0, 0, 0], [X, Y], R)
     pygame.display.flip()
 
