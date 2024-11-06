@@ -12,11 +12,22 @@ class Player:
         self.sizeX = sizeX
         self.sizeY = sizeY
 
-    def face(self, x, y, vx):
-        if x - R <= self.x + 30:
-            if y >= self.y and y <= self.y + 100:
-                return -vx
+    def face(self, x, y, vx, turn):
+        if turn == 'left':
+            if x - R <= self.x + 30:
+                if y >= self.y and y <= self.y + 100:
+                    return -vx
+        else:
+            if x + R >= self.x:
+                if y >= self.y and y <= self.y + 100:
+                    return -vx
         return vx
+
+    def move_bot(self, y):
+        if self.y + 50 < y - 50:
+            self.y += 2
+        elif self.y + 50 > y + 50:
+            self.y -= 2
 
 
 sizeX, sizeY = 1000, 500
@@ -62,10 +73,9 @@ game_run = True
 FPS = 60
 
 player = Player(15, 20)
+player_bot = Player(955, 20)
 
 X, Y = 200, 200
-X1 = 15; Y1 = 20
-X2 = 985; Y2 = 20
 
 vx = 10; vy = 4
 vx1 = 10; vy1 = 2
@@ -101,7 +111,8 @@ while game_run:
 
     vx, vy = border(X, Y, vx, vy)
 
-    vx = player.face(X, Y, vx)
+    vx = player.face(X, Y, vx, 'left')
+    vx = player_bot.face(X, Y, vx, 'right')
 
     if X - R <= 0:
         X = 500
@@ -110,14 +121,12 @@ while game_run:
         X = 500
         Y = randint(50, 450)
 
-    if Y2 + 50 < Y - 50:
-        Y2 += 2
-    elif Y2 + 50 > Y + 50:
-        Y2 -= 2
+    player_bot.move_bot(Y)
 
     pygame.draw.rect(screen, [0, 0, 0], [player.x, player.y, player.sizeX, player.sizeY])
-    pygame.draw.rect(screen, [0, 0, 0], [X2, Y2, 30, 100])
+    pygame.draw.rect(screen, [0, 0, 0], [player_bot.x, player_bot.y, player_bot.sizeX, player_bot.sizeY])
     pygame.draw.circle(screen, [0, 0, 0], [X, Y], R)
+
     pygame.display.flip()
 
 
@@ -134,9 +143,3 @@ pygame.display.flip()
 # pygame.display.flip()
 
 pygame.quit()
-
-
-"""
- 1. Начало: пусть по клику мышки создаётся круг случайного размера и случайного цвета (1 он один, 2 их сколько угодно)
- 2. Продолжение: кликер + аэрохоккей
-"""
