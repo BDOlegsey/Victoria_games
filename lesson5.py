@@ -81,6 +81,7 @@ person_img_right = pygame.image.load('img\\person_right.png')
 
 my_font = pygame.font.SysFont('arial', 30)
 text1 = my_font.render('Hello world!', True, (0, 0, 0))
+text2 = my_font.render(str(FPS), True, (0, 0, 0))
 
 person = Person(10, 10, person_img_right, person_img_left, True)
 player = Player(15, 20)
@@ -122,6 +123,7 @@ while game_run:
     person.draw(screen)
 
     screen.blit(text1, (50, 50))
+    screen.blit(text2, (50, 100))
 
     pygame.display.flip()
 
