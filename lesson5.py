@@ -6,40 +6,48 @@ sizeX, sizeY = 1000, 500
 
 
 class Ball:
-    def __init__(self, x, y, R, speedX, speedY):
+    def __init__(self, x, y, R, speedX, speedY, image):
         self.x = x
         self.y = y
         self.speedX = speedX
         self.speedY = speedY
         self.R = R
+        self.image = image
 
     def move(self):
         self.x += self.speedX
         self.y += self.speedY
 
-    def border(self):
-        if self.x - self.R <= 0 or self.x + self.R >= sizeX:
+    def border(self, count):
+        if self.x <= 0:
             self.x = 500
             self.y = randint(50, 450)
-        elif self.y - self.R <= 0 or self.y + self.R >= sizeY:
+            count -= 1
+        elif self.x + self.R >= sizeX:
+            self.x = 500
+            self.y = randint(50, 450)
+            count += 1
+        elif self.y <= 0 or self.y + self.R >= sizeY:
             self.speedY *= -1
+        return count
 
 
 class Player:
-    def __init__(self, x, y, sizeX=30, sizeY=100):
+    def __init__(self, x, y, image, sizeX=30, sizeY=100):
         self.x = x
         self.y = y
         self.sizeX = sizeX
         self.sizeY = sizeY
+        self.image = image
 
     def face(self, ball, turn):
         if turn == 'left':
-            if ball.x - ball.R <= self.x + 30:
-                if ball.y >= self.y and ball.y <= self.y + 100:
+            if ball.x <= self.x + 100:
+                if ball.y >= self.y and ball.y <= self.y + 200:
                     return -ball.speedX
         else:
             if ball.x + ball.R >= self.x:
-                if ball.y >= self.y and ball.y <= self.y + 100:
+                if ball.y >= self.y and ball.y <= self.y + 200:
                     return -ball.speedX
         return ball.speedX
 
@@ -74,20 +82,23 @@ clock = pygame.time.Clock()
 
 game_run = True
 FPS = 60
+count = 0
 
 person_img = pygame.image.load('img\\person.png')
 person_img_left = pygame.image.load('img\\person_left.png')
 person_img_right = pygame.image.load('img\\person_right.png')
+ball_img = pygame.image.load('img\\ball.png')
+player_img = pygame.image.load('img\\player.png')
 
 my_font = pygame.font.SysFont('arial', 30)
 text1 = my_font.render('Hello world!', True, (0, 0, 0))
-text2 = my_font.render(str(FPS), True, (0, 0, 0))
+text2 = my_font.render(str(count), True, (0, 0, 0))
 
 person = Person(10, 10, person_img_right, person_img_left, True)
-player = Player(15, 20)
-player_bot = Player(955, 20)
+player = Player(15, 20, player_img)
+player_bot = Player(800, 20, player_img)
 
-ball = Ball(200, 200, 35, 10, 4)
+ball = Ball(200, 200, 100, 10, 4, ball_img)
 
 while game_run:
     clock.tick(FPS)
@@ -109,16 +120,21 @@ while game_run:
             pass
 
     ball.move()
-    ball.border()
+    count = ball.border(count)
+    text2 = my_font.render(str(count), True, (0, 0, 0))
 
     ball.speedX = player.face(ball, 'left')
     ball.speedX = player_bot.face(ball, 'right')
 
     player_bot.move_bot(ball)
 
-    pygame.draw.rect(screen, [0, 0, 0], [player.x, player.y, player.sizeX, player.sizeY])
-    pygame.draw.rect(screen, [0, 0, 0], [player_bot.x, player_bot.y, player_bot.sizeX, player_bot.sizeY])
-    pygame.draw.circle(screen, [0, 0, 0], [ball.x, ball.y], ball.R)
+    #pygame.draw.rect(screen, [0, 0, 0], [player.x, player.y, player.sizeX, player.sizeY])
+    #pygame.draw.rect(screen, [0, 0, 0], [player_bot.x, player_bot.y, player_bot.sizeX, player_bot.sizeY])
+    #pygame.draw.circle(screen, [0, 0, 0], [ball.x, ball.y], ball.R)
+
+    screen.blit(player.image, (player.x, player.y))
+    screen.blit(player_bot.image, (player_bot.x, player_bot.y))
+    screen.blit(ball.image, (ball.x, ball.y))
 
     person.draw(screen)
 
