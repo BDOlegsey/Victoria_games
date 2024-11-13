@@ -51,10 +51,17 @@ class Player:
 
 
 class Person:
-    def __init__(self, x, y, image):
+    def __init__(self, x, y, image_right, image_left, right):
         self.x = x
         self.y = y
-        self.image = image
+        self.images = [image_right, image_left]
+        self.right = right
+
+    def draw(self, _screen):
+        if self.right:
+            _screen.blit(self.images[0], (self.x, self.y))
+        else:
+            _screen.blit(self.images[1], (self.x, self.y))
 
 
 pygame.init()
@@ -69,8 +76,13 @@ game_run = True
 FPS = 60
 
 person_img = pygame.image.load('img\\person.png')
+person_img_left = pygame.image.load('img\\person_left.png')
+person_img_right = pygame.image.load('img\\person_right.png')
 
-person = Person(10, 10, person_img)
+my_font = pygame.font.SysFont('arial', 30)
+text1 = my_font.render('Hello world!', True, (0, 0, 0))
+
+person = Person(10, 10, person_img_right, person_img_left, True)
 player = Player(15, 20)
 player_bot = Player(955, 20)
 
@@ -86,8 +98,12 @@ while game_run:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 4:
                 player.y -= 10
+                person.x += 10
+                person.right = True
             if event.button == 5:
                 player.y += 10
+                person.x -= 10
+                person.right = False
         if event.type == pygame.MOUSEBUTTONUP:
             pass
 
@@ -97,14 +113,15 @@ while game_run:
     ball.speedX = player.face(ball, 'left')
     ball.speedX = player_bot.face(ball, 'right')
 
-
     player_bot.move_bot(ball)
 
     pygame.draw.rect(screen, [0, 0, 0], [player.x, player.y, player.sizeX, player.sizeY])
     pygame.draw.rect(screen, [0, 0, 0], [player_bot.x, player_bot.y, player_bot.sizeX, player_bot.sizeY])
     pygame.draw.circle(screen, [0, 0, 0], [ball.x, ball.y], ball.R)
 
-    screen.blit(person.image, (person.x, person.y))
+    person.draw(screen)
+
+    screen.blit(text1, (50, 50))
 
     pygame.display.flip()
 
