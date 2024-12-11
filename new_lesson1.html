@@ -4,8 +4,7 @@
 		<title>P5.js Example</title>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.14/p5.js"></script>
 		<script>
-            let x = 100,
-            y = 100;
+            let a = [];
 			function setup(){
 				createCanvas(500, 500);
 				background(150);
@@ -20,6 +19,10 @@
 				rect(100, 200, 40, 70);
 				fill('red');
 				text('Hello!', 200, 300);
+				append(a, 300);
+				for (let i = 0; i < a.length; i++) {
+					rect(a[i], 200, 40, 70);
+				}
 			}
 		</script>
 	</head>
