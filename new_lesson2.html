@@ -5,7 +5,19 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.14/p5.js"></script>
 		<script>
 
+			class Player {
+				constructor(x, y) {
+					this.x = x;
+					this.y = y;
+				}
 
+				move(dx, dy) {
+					this.x += dx;
+					this.y += dy;
+				}
+			}
+
+			let player = new Player(40, 40);
             let a = [];
             let x = 20, y = 40;
             let _string = "Hello!";
