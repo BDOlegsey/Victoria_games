@@ -26,8 +26,14 @@
 				fill('red');
 				text(_string, 200, 300);
 				append(a, 300);
-				for (let i = 0; i < a.length; i++) {
-					rect(a[i], 200, 40, 70);
+				//for (let i = 0; i < a.length; i++) {
+				//	rect(a[i], 200, 40, 70);
+				//}
+
+				let ind = 0;
+				while (ind < a.length) {
+					ind++;
+					rect(a[ind], 200, 40, 70);
 				}
 
 				//if (mouseIsPressed) {
